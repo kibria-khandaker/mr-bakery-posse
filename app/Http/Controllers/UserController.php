@@ -12,7 +12,6 @@ use Illuminate\View\View;
 
 class UserController extends Controller {
 
-
     function LoginPage():View{
         return view('pages.auth.login-page');
     }
@@ -27,6 +26,9 @@ class UserController extends Controller {
     }
     function ResetPasswordPage():View{
         return view('pages.auth.reset-pass-page');
+    }
+    function ProfilePage():View{
+        return view('pages.dashboard.profile-page');
     }
 
 
@@ -57,15 +59,16 @@ class UserController extends Controller {
     function UserLogin( Request $request ) {
         $count = User::where( 'email', '=', $request->input( 'email' ) )
             ->where( 'password', '=', $request->input( 'password' ) )
-            ->count();
+            ->select('id')->first();
+            // ->count();
 
-        if ( $count == 1 ) {
-            $token = JWTToken::CreateToken( $request->input( 'email' ) );
+        if ( $count !== null ) {
+            $token = JWTToken::CreateToken( $request->input( 'email' ),$count->id );
             return response()->json( [
                 'status'  => 'success',
                 'message' => 'User Login Successfully',
-                'token'   => $token,
-            ], 200 );
+                // 'token'   => $token, // token show in body for post mane oe view on page for development er jonno
+            ], 200 )->cookie('token', $token,60*24*30);;
         } else {
             return response()->json( [
                 'status'  => 'failed',
@@ -119,9 +122,9 @@ class UserController extends Controller {
             // pass reset token issue
             $token = JWTToken::CreateTokenForSetPassword( $request->input( 'email' ) );
             return response()->json( [
-                'status'  => 'Success',
+                'status'  => 'success',
                 'message' => 'OTP verification Successfully',
-                'token'   => $token,
+                // 'token'   => $token, // token show in body for post mane oe view on page for development er jonno
             ], 200 )->cookie('token', $token,60*24*30);
         } else {
             return response()->json( [
@@ -147,7 +150,10 @@ class UserController extends Controller {
 
             $success = User::where( 'email', '=', $email )->update( ['password' => $password] );            
             if ($success) {
-                return response()->json( ['status' => 'success', 'message' => 'Password Updated Successfully'], 200 )->cookie('token', '',-1);
+                return response()->json( [
+                    'status' => 'success', 
+                    'message' => 'Password Updated Successfully'
+                ], 200 )->cookie('token', '',-1);
             } else {
                 return response()->json( [
                     'status'  => 'failed',
@@ -163,5 +169,13 @@ class UserController extends Controller {
         }
 
     }
+
+    public function UserLogout() {
+        // return redirect('/userLogin')->cookie('token', '', -1);
+        return redirect('/')->cookie('token', '', -1);
+    }
+
+
+    
 
 }
