@@ -8,8 +8,8 @@
                     <div class="container-fluid m-0 p-0">
                         <div class="row m-0 p-0">
                             <div class="col-md-4 p-2">
-                                <label>Email Address</label>
-                                <input id="email" placeholder="User Email" class="form-control" type="email"/>
+                                <label>Email Address </label>
+                                <input readonly id="email" placeholder="User Email" class="form-control" type="email"/>
                             </div>
                             <div class="col-md-4 p-2">
                                 <label>First Name</label>
@@ -41,9 +41,29 @@
 </div>
 
 <script>
+    getProfile();
 
+    async function getProfile() {
+        showLoader();
+        let res = await axios.get('/user-profile')
+        hideLoader();
 
-  async function onUpdate() {
+        if(res.status===200 && res.data['status']==='success'){
+            let data = res.data['data'];
+
+            document.getElementById('email').value=data['email'];
+            document.getElementById('firstName').value=data['firstName'];
+            document.getElementById('lastName').value=data['lastName'];
+            document.getElementById('mobile').value=data['mobile'];
+            document.getElementById('password').value=data['password'];
+        }else{
+            // errorToast("failure");
+            errorToast(res.data['message'])
+        }
+
+    }
+
+    async function onUpdate() {
 
         let email = document.getElementById('email').value;
         let firstName = document.getElementById('firstName').value;
@@ -68,7 +88,7 @@
         }
         else{
             showLoader();
-            let res=await axios.post("/user-registration",{
+            let res=await axios.post("/user-update",{
                 email:email,
                 firstName:firstName,
                 lastName:lastName,
@@ -78,9 +98,7 @@
             hideLoader();
             if(res.status===200 && res.data['status']==='success'){
                 successToast(res.data['message']);
-                setTimeout(function (){
-                    window.location.href='/'
-                },2000)
+                await getProfile();
             }
             else{
                 errorToast(res.data['message'])

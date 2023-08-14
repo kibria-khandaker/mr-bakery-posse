@@ -3,35 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Helper\JWTToken;
-use App\Mail\OTPMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class UserController extends Controller {
 
-    function LoginPage():View{
-        return view('pages.auth.login-page');
+    function LoginPage(): View {
+        return view( 'pages.auth.login-page' );
     }
-    function RegistrationPage():View{
-        return view('pages.auth.registration-page');
+    function RegistrationPage(): View {
+        return view( 'pages.auth.registration-page' );
     }
-    function SendOtpPage():View{
-        return view('pages.auth.send-otp-page');
+    function SendOtpPage(): View {
+        return view( 'pages.auth.send-otp-page' );
     }
-    function VerifyOTPPage():View{
-        return view('pages.auth.verify-otp-page');
+    function VerifyOTPPage(): View {
+        return view( 'pages.auth.verify-otp-page' );
     }
-    function ResetPasswordPage():View{
-        return view('pages.auth.reset-pass-page');
+    function ResetPasswordPage(): View {
+        return view( 'pages.auth.reset-pass-page' );
     }
-    function ProfilePage():View{
-        return view('pages.dashboard.profile-page');
+    function ProfilePage(): View {
+        return view( 'pages.dashboard.profile-page' );
     }
-
-
 
     function UserRegistration( Request $request ) {
         try {
@@ -59,16 +55,16 @@ class UserController extends Controller {
     function UserLogin( Request $request ) {
         $count = User::where( 'email', '=', $request->input( 'email' ) )
             ->where( 'password', '=', $request->input( 'password' ) )
-            ->select('id')->first();
-            // ->count();
+            ->select( 'id' )->first();
+        // ->count();
 
         if ( $count !== null ) {
-            $token = JWTToken::CreateToken( $request->input( 'email' ),$count->id );
+            $token = JWTToken::CreateToken( $request->input( 'email' ), $count->id );
             return response()->json( [
                 'status'  => 'success',
                 'message' => 'User Login Successfully',
                 // 'token'   => $token, // token show in body for post mane oe view on page for development er jonno
-            ], 200 )->cookie('token', $token,60*24*30);;
+            ], 200 )->cookie( 'token', $token, 60 * 24 * 30 );
         } else {
             return response()->json( [
                 'status'  => 'failed',
@@ -89,7 +85,7 @@ class UserController extends Controller {
 
             //sent otp to mail
             // Mail::to( $email )->send( new OTPMail( $otp ) );
-            
+
             //insert otp to database
             User::where( 'email', '=', $email )->update( ['otp' => $otp] );
             // $User = User::where( 'email', '=', $email )->update( ['otp' => $otp] );
@@ -125,7 +121,7 @@ class UserController extends Controller {
                 'status'  => 'success',
                 'message' => 'OTP verification Successfully',
                 // 'token'   => $token, // token show in body for post mane oe view on page for development er jonno
-            ], 200 )->cookie('token', $token,60*24*30);
+            ], 200 )->cookie( 'token', $token, 60 * 24 * 30 );
         } else {
             return response()->json( [
                 'status'  => 'failed',
@@ -148,12 +144,12 @@ class UserController extends Controller {
             //         'message' => 'Request Successful'
             //     ], 200 );
 
-            $success = User::where( 'email', '=', $email )->update( ['password' => $password] );            
-            if ($success) {
+            $success = User::where( 'email', '=', $email )->update( ['password' => $password] );
+            if ( $success ) {
                 return response()->json( [
-                    'status' => 'success', 
-                    'message' => 'Password Updated Successfully'
-                ], 200 )->cookie('token', '',-1);
+                    'status'  => 'success',
+                    'message' => 'Password Updated Successfully',
+                ], 200 )->cookie( 'token', '', -1 );
             } else {
                 return response()->json( [
                     'status'  => 'failed',
@@ -161,7 +157,7 @@ class UserController extends Controller {
                 ], 401 );
             }
 
-        } catch (Exception $exception) {
+        } catch ( Exception $exception ) {
             return response()->json( [
                 'status'  => 'failed',
                 'message' => 'Something went wrong 2',
@@ -172,10 +168,51 @@ class UserController extends Controller {
 
     public function UserLogout() {
         // return redirect('/userLogin')->cookie('token', '', -1);
-        return redirect('/')->cookie('token', '', -1);
+        return redirect( '/' )->cookie( 'token', '', -1 );
+    }
+
+    public function UserProfile( Request $request ) {
+        $email = $request->header( 'email' );
+        $user = User::where( 'email', '=', $email )->first();
+
+        return response()->json( [
+            'status'  => 'success',
+            'message' => 'Request Successful',
+            'data' => $user
+        ], 200 );
+    }
+
+    function UpdateProfile(Request $request){
+        try{
+         $email = $request->header('email');
+         $firstName = $request->input('firstName');
+         $lastName = $request->input('lastName');
+         $mobile = $request->input('mobile');
+         $password = $request->input('password');
+   
+         User::where('email','=',$email)->update([
+          'firstName'=>$firstName,
+          'lastName'=>$lastName,
+          'mobile'=>$mobile,
+          'password'=>$password
+         ]);
+         return response()->json([
+           'status' => 'success',
+           'message' => 'Update successfully'
+         ],200);
+   
+        }catch(Exception $e){
+             
+         return response()->json([
+           'status' => 'failed',
+           'message' => 'Something went wrong'
+         ],200);
+   
+        }
+
     }
 
 
-    
+
 
 }
