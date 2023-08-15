@@ -36,12 +36,6 @@ Route::get('/total-category',[CategoryController::class,'CategoryTotal'])->middl
 
 
 
-
-
-
-
-
-
 // Page Routes
 // Route::get('/userLogin',[UserController::class,'LoginPage']);
 Route::get('/',[UserController::class,'LoginPage']);

@@ -12,6 +12,8 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/toastify.min.css') }}" rel="stylesheet" />
 
+    <link href="{{asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css')}}" rel="stylesheet" />
+    
     <link href="{{ asset('css/jquery.dataTables.min.css') }}" rel="stylesheet" />
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
@@ -61,6 +63,42 @@
     </nav>
 
     <div id="sideNavRef" class="side-nav-open">
+
+        <a href="{{url("/dashboard")}}" class="side-bar-item">
+            <i class="bi bi-graph-up"></i>
+            <span class="side-bar-item-caption">Dashboard</span>
+        </a>
+    
+        <a href="{{url("/customerPage")}}" class="side-bar-item">
+            <i class="bi bi-people"></i>
+            <span class="side-bar-item-caption">Customer</span>
+        </a>
+    
+        <a href="{{url("/categoryPage")}}" class="side-bar-item">
+            <i class="bi bi-list-nested"></i>
+            <span class="side-bar-item-caption">Category</span>
+        </a>
+    
+        <a href="{{url("/productPage")}}" class="side-bar-item">
+            <i class="bi bi-bag"></i>
+            <span class="side-bar-item-caption">Product</span>
+        </a>
+    
+        <a href="{{url('/salePage')}}" class="side-bar-item">
+            <i class="bi bi-currency-dollar"></i>
+            <span class="side-bar-item-caption">Create Sale</span>
+        </a>
+    
+        <a href="{{url('/invoicePage')}}" class="side-bar-item">
+            <i class="bi bi-receipt"></i>
+            <span class="side-bar-item-caption">Invoice</span>
+        </a>
+    
+        <a href="#Getting-Started" class="side-bar-item">
+            <i class="bi bi-file-earmark-bar-graph"></i>
+            <span class="side-bar-item-caption">Report</span>
+        </a>
+
     </div>
 
 
@@ -68,7 +106,7 @@
         @yield('content')
     </div>
 
-    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
 
     <script>
         function MenuBarClickHandler() {
