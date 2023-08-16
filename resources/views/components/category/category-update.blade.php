@@ -27,8 +27,6 @@
 
 
 <script>
-
-
    async function FillUpUpdateForm(id){
         document.getElementById('updateID').value=id;
         showLoader();
@@ -36,7 +34,7 @@
         hideLoader();
         document.getElementById('categoryNameUpdate').value=res.data['name'];
     }
-
+ 
     async function Update() {
 
         let categoryName = document.getElementById('categoryNameUpdate').value;
@@ -53,20 +51,13 @@
 
             if(res.status===200 && res.data===1){
                 document.getElementById("update-form").reset();
-                successToast("Request success !")
+                successToast("Update Success!")
                 await getList();
             }
             else{
-                errorToast("Request fail !")
+                errorToast("Request fail!")
             }
-
-
         }
-
-
-
     }
-
-
 
 </script>
