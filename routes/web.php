@@ -52,6 +52,7 @@ Route::post('/update-product',[ProductController::class,'UpdateProduct'])->middl
 Route::post('/delete-product',[ProductController::class,'DeleteProduct'])->middleware(TokenVerificationMiddleware::class);
 // Route::get('/total-product',[ProductController::class,'TotalProduct'])->middleware(TokenVerificationMiddleware::class);
 
+Route::get('/logout',[UserController::class,'UserLogout'])->middleware(TokenVerificationMiddleware::class);
 
 // Page Routes
 // Route::get('/userLogin',[UserController::class,'LoginPage']);
@@ -60,7 +61,6 @@ Route::get('/userRegistration',[UserController::class,'RegistrationPage']);
 Route::get('/sendOtp',[UserController::class,'SendOtpPage']);
 Route::get('/verifyOtp',[UserController::class,'VerifyOTPPage']);
 Route::get('/resetPassword',[UserController::class,'ResetPasswordPage'])->middleware([TokenVerificationMiddleware::class]);
-Route::get('/logout',[UserController::class,'UserLogout'])->middleware(TokenVerificationMiddleware::class);
 Route::get('/dashboard',[DashboardController::class,'DashboardPage'])->middleware([TokenVerificationMiddleware::class]);
 Route::get('/userProfile',[UserController::class,'ProfilePage'])->middleware([TokenVerificationMiddleware::class]);
 

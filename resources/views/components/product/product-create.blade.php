@@ -23,7 +23,7 @@
                                 <input type="text" class="form-control" id="productUnit">
 
                                 <br/>
-                                <img class="w-15" id="newImg" src="{{asset('images/default.jpg')}}"/>
+                                <img class="w-15" id="newImg" src="{{asset('images/placeholder-img.jpg')}}"/>
                                 <br/>
 
                                 <label class="form-label">Image</label>
@@ -43,10 +43,7 @@
     </div>
 </div>
 
-
 <script>
-
-
 
     FillCategoryDropDown();
 
@@ -58,9 +55,7 @@
         })
     }
 
-
     async function Save() {
-
         let productCategory=document.getElementById('productCategory').value;
         let productName = document.getElementById('productName').value;
         let productPrice = document.getElementById('productPrice').value;

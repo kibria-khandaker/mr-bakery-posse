@@ -28,8 +28,8 @@
                                 <label class="form-label">Image</label>
                                 <input oninput="oldImg.src=window.URL.createObjectURL(this.files[0])"  type="file" class="form-control" id="productImgUpdate">
 
-                                <input type="text" class="d-none" id="updateID">
-                                <input type="text" class="d-none" id="filePath">
+                                <input type="text" class="" id="updateID">
+                                <input type="text" class="" id="filePath">
 
 
                             </div>
@@ -81,8 +81,6 @@
 
     }
 
-
-
     async function update() {
 
         let productCategoryUpdate=document.getElementById('productCategoryUpdate').value;
@@ -92,7 +90,6 @@
         let updateID=document.getElementById('updateID').value;
         let filePath=document.getElementById('filePath').value;
         let productImgUpdate = document.getElementById('productImgUpdate').files[0];
-
 
         if (productCategoryUpdate.length === 0) {
             errorToast("Product Category Required !")
@@ -136,7 +133,7 @@
                 await getList();
             }
             else{
-                errorToast("Request fail !")
+                errorToast("Request fail!")
             }
         }
     }
