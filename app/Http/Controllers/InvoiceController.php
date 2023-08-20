@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\InvoiceDetails\CustomerResource;
+use App\Http\Resources\InvoiceDetails\InvoiceProductResource;
+use App\Http\Resources\InvoiceDetails\InvoiceResource;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoiceProduct;
@@ -79,6 +82,7 @@ class InvoiceController extends Controller {
         $invoiceTotal = Invoice::where( 'user_id', $user_id )->where( 'id', $request->input( 'inv_id' ) )->first();
         $invoiceProduct = InvoiceProduct::where( 'invoice_id', $request->input( 'inv_id' ) )
             ->where( 'user_id', $user_id )
+            ->with('product')
             ->get();
 
         return array(
@@ -86,33 +90,29 @@ class InvoiceController extends Controller {
             'invoice'  => $invoiceTotal,
             'product'  => $invoiceProduct,
         );
-
     }
 
-    // function InvoiceDetailsWithResource( Request $request ) {
+    function InvoiceDetailsWithResource( Request $request ) {
 
-    //     $user_id = $request->header( 'id' );
+        $user_id = $request->header( 'id' );
+        $customerDetails = Customer::where( 'user_id', $user_id )->where( 'id', $request->input( 'cus_id' ) )->first();
+        $invoiceTotal = Invoice::where( 'user_id', $user_id )->where( 'id', $request->input( 'inv_id' ) )->first();
+        $invoiceProducts = InvoiceProduct::where( 'invoice_id', $request->input( 'inv_id' ) )
+            ->where( 'user_id', $user_id )
+            ->get();
 
-    //     $customerDetails = Customer::where( 'user_id', $user_id )->where( 'id', $request->input( 'cus_id' ) )->first();
+        // Transform the data using resource classes
+        $customerResource = new CustomerResource( $customerDetails );
+        $invoiceResource = new InvoiceResource( $invoiceTotal );
+        $invoiceProductResources = InvoiceProductResource::collection( $invoiceProducts );
 
-    //     $invoiceTotal = Invoice::where( 'user_id', $user_id )->where( 'id', $request->input( 'inv_id' ) )->first();
+        return response()->json( [
+            'customer'         => $customerResource,
+            'invoice'          => $invoiceResource,
+            'invoice_products' => $invoiceProductResources,
+        ] );
 
-    //     $invoiceProducts = InvoiceProduct::where( 'invoice_id', $request->input( 'inv_id' ) )
-    //         ->where( 'user_id', $user_id )
-    //         ->get();
-
-    //     // Transform the data using resource classes
-    //     $customerResource = new CustomerResource( $customerDetails );
-    //     $invoiceResource = new InvoiceResource( $invoiceTotal );
-    //     $invoiceProductResources = InvoiceProductResource::collection( $invoiceProducts );
-
-    //     return response()->json( [
-    //         'customer'         => $customerResource,
-    //         'invoice'          => $invoiceResource,
-    //         'invoice_products' => $invoiceProductResources,
-    //     ] );
-
-    // }
+    }
 
     function invoiceDelete( Request $request ) {
         DB::beginTransaction();
