@@ -83,8 +83,8 @@
         invoiceList.empty();
 
         res.data['product'].forEach(function (item,index) {
-            console.log("1-Item invoice details: ",item);
-            console.log("2-product invoice details: ",item['product']);
+            // console.log("1-Item invoice details: ",item);
+            // console.log("2-product invoice details: ",item['product']);
             let row=`<tr class="text-xs">
                 <td>${item['product']['name']}</td>
                 <td>${item['qty']}</td>
